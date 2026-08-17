@@ -27,5 +27,14 @@
       "@data/*": ["src/data/*"]
     }
   },
-  "include": ["src", "test", "vite.config.ts"]
+  "include": ["src", "test", "vite.config.ts"],
+
+  /*
+   * src/aoe is the vendored Age of Kings simulation, adopted wholesale. It was
+   * written against a looser tsconfig (no noUncheckedIndexedAccess) and passes
+   * its own typecheck; re-linting someone else's 7k lines under our stricter
+   * settings would be noise, not signal. It is excluded here and validated by
+   * its own suite instead — `npm run test:aoe`, 73 tests.
+   */
+  "exclude": ["src/aoe", "aoe-test", "aoe-data", "node_modules", "dist"]
 }

@@ -4,3 +4,20 @@ shots/
 test/fixtures/path-failure-*.json
 *.log
 .DS_Store
+
+# ── Extracted Age of Empires II data and art ─────────────────────────────────
+# Derived from the user's own AoE2 DE install (empires2_x2_p1.dat and the DE
+# sprite/UI trees). Microsoft-owned: usable in a private build, NEVER committed —
+# and Qatar-Age is a PUBLIC repository, so this guard is load-bearing.
+# Regenerate locally from age-of-kings-qatar's tools/scrape_assets.py.
+aoe-data/
+aoe-test/
+src/aoe/
+public/aoe-assets/
+assets/aoe/
+*.slp
+*.smx
+*.smp
+*.sld
+*.drs
+*.dat
