@@ -23,6 +23,8 @@ import { parseColor } from '../data'
 import type { GameWorld } from '../sim/world'
 import { AoeSprite, animationForState } from './sprites/aoe-sprite'
 import type { SpriteLibrary } from './sprites/library'
+import { BuildingSpriteFactory, conditionFor, type Condition } from './building-sprites'
+import type { Sprite } from 'pixi.js'
 
 /**
  * Maps our simulation's type ids onto sprite ids in the art pack.
@@ -51,6 +53,8 @@ interface Display {
   root: Container
   body: Graphics
   sprite: AoeSprite | null
+  building: Sprite | null
+  lastCondition: Condition | -1
   selectionRing: Graphics
   healthBar: Graphics
   lastHealth: number
@@ -64,13 +68,19 @@ export class EntityRenderer {
   private displays = new Map<number, Display>()
   private world: GameWorld
   private sprites: SpriteLibrary | null
+  private buildings: BuildingSpriteFactory | null
 
   /** Set false to force placeholder shapes even when art is loaded. */
   useSprites = true
 
-  constructor(world: GameWorld, sprites: SpriteLibrary | null = null) {
+  constructor(
+    world: GameWorld,
+    sprites: SpriteLibrary | null = null,
+    buildings: BuildingSpriteFactory | null = null,
+  ) {
     this.world = world
     this.sprites = sprites
+    this.buildings = buildings
     // Painter's algorithm: PixiJS sorts children by zIndex, which we set from
     // the isometric depth in coords.depthOf.
     this.container.sortableChildren = true
@@ -110,6 +120,8 @@ export class EntityRenderer {
       root,
       body,
       sprite: null,
+      building: null,
+      lastCondition: -1,
       selectionRing,
       healthBar,
       lastHealth: -1,
@@ -117,9 +129,22 @@ export class EntityRenderer {
       lastState: '',
     }
 
+    // Buildings take their art from the damage-state sheet.
+    if (this.useSprites && e.building && e.typeId && this.buildings?.has(e.typeId)) {
+      const frac = e.health ? e.health.current / e.health.max : 1
+      const cond = e.building.progress < 1 ? conditionFor(0.5) : conditionFor(frac)
+      const b = this.buildings.create(e.typeId, e.building.widthNe, e.building.heightSe, cond)
+      if (b) {
+        if (e.building.progress < 1) b.alpha = 0.55
+        d.building = b
+        d.lastCondition = cond
+        root.addChildAt(b, 1)
+      }
+    }
+
     // Real art if the pack has it; placeholder shapes otherwise. This is what
     // lets the game stay playable while art lands one unit at a time.
-    const spriteId = e.typeId ? TYPE_TO_SPRITE[e.typeId] : undefined
+    const spriteId = e.typeId && !e.building ? TYPE_TO_SPRITE[e.typeId] : undefined
     if (this.useSprites && spriteId && this.sprites) {
       const s = this.sprites.createIfReady(spriteId)
       if (s) {
@@ -131,7 +156,7 @@ export class EntityRenderer {
       }
     }
 
-    if (!d.sprite) this.drawBody(e, d)
+    if (!d.sprite && !d.building) this.drawBody(e, d)
     else body.visible = false
 
     return d
@@ -255,8 +280,16 @@ export class EntityRenderer {
       d.lastHealth = e.health.current
     }
 
-    // Construction progress redraws the body as it fills in.
-    if (e.building && e.renderDirty) {
+    // Building condition: swap the damage-state art when HP crosses a threshold.
+    if (e.building && d.building && e.typeId && e.health) {
+      const frac = e.health.current / e.health.max
+      const cond = e.building.progress < 1 ? conditionFor(0.5) : conditionFor(frac)
+      if (cond !== d.lastCondition) {
+        this.buildings?.applyCondition(d.building, e.typeId, cond)
+        d.lastCondition = cond
+      }
+      d.building.alpha = e.building.progress < 1 ? 0.55 : 1
+    } else if (e.building && !d.building && e.renderDirty) {
       this.drawBody(e, d)
     }
 

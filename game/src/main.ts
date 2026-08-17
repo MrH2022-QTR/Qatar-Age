@@ -27,6 +27,9 @@ import { GameInput, InputManager } from './render/input'
 import { Hud } from './render/hud'
 import { TerrainRenderer } from './render/terrain-renderer'
 import { SpriteLibrary } from './render/sprites/library'
+import { TerrainSpriteRenderer, loadTerrainSheet } from './render/terrain-sprites'
+import { BuildingSpriteFactory, loadBuildingSheet } from './render/building-sprites'
+import { Assets, type Texture } from 'pixi.js'
 import { TYPE_TO_SPRITE } from './render/entity-renderer'
 
 const MAP_SIZE = 96
@@ -104,14 +107,39 @@ async function main(): Promise<void> {
     console.info('[art] no sprite pack found - using placeholder shapes')
   }
 
+  // Terrain: real tile art if the pack is present, flat diamonds otherwise.
+  const terrainSheet = await loadTerrainSheet('assets/sprites')
+  let terrainSprites: TerrainSpriteRenderer | null = null
   const terrainRenderer = new TerrainRenderer(terrain)
-  const entityRenderer = new EntityRenderer(world, haveArt ? spriteLibrary : null)
+
+  if (terrainSheet) {
+    const atlas = await Assets.load<Texture>(`assets/sprites/${terrainSheet.sheet}`)
+    terrainSprites = new TerrainSpriteRenderer(terrain, terrainSheet, atlas, app.renderer)
+    console.info(`[art] terrain atlas: ${terrainSheet.rows.flat().length} tiles`)
+  } else {
+    console.info('[art] no terrain atlas - using flat tiles')
+  }
+
+  // Buildings: damage-state sheet if present.
+  const buildingSheet = await loadBuildingSheet('assets/sprites')
+  let buildingFactory: BuildingSpriteFactory | null = null
+  if (buildingSheet) {
+    const atlas = await Assets.load<Texture>(`assets/sprites/${buildingSheet.sheet}`)
+    buildingFactory = new BuildingSpriteFactory(buildingSheet, atlas)
+    console.info(`[art] building sheet: ${buildingSheet.rows.length} types x 3 damage states`)
+  }
+
+  const entityRenderer = new EntityRenderer(
+    world,
+    haveArt ? spriteLibrary : null,
+    buildingFactory,
+  )
   const pathOverlay = new Graphics()
   const gridOverlay = terrainRenderer.buildGridOverlay()
   gridOverlay.visible = false
 
   worldLayer.addChild(
-    terrainRenderer.container,
+    terrainSprites ? terrainSprites.container : terrainRenderer.container,
     gridOverlay,
     pathOverlay,
     entityRenderer.container,
@@ -163,8 +191,13 @@ async function main(): Promise<void> {
     camera.setViewport(app.screen.width, app.screen.height)
     camera.apply(worldLayer)
 
-    terrainRenderer.syncIfDirty()
-    terrainRenderer.cull(camera)
+    if (terrainSprites) {
+      terrainSprites.syncIfDirty()
+      terrainSprites.cull(camera)
+    } else {
+      terrainRenderer.syncIfDirty()
+      terrainRenderer.cull(camera)
+    }
     entityRenderer.sync()
     entityRenderer.animate(realDelta)
     if (showPaths) entityRenderer.drawPaths(pathOverlay)

@@ -33,6 +33,7 @@
 
 import { mkdirSync, writeFileSync, readFileSync, existsSync, rmSync, readdirSync } from 'node:fs'
 import { join, basename } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import sharp from 'sharp'
 
 /** Alpha above this counts as sprite content. Tuned to reject soft glow haze. */
@@ -363,9 +364,15 @@ async function selftest() {
   return failures
 }
 
-const opts = parseArgs()
+// Only run the CLI when invoked directly — this file is also imported as a
+// library by other tools, and an unguarded CLI would fire on every import.
+const invokedDirectly = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href
 
-if (opts.selftest) {
+const opts = invokedDirectly ? parseArgs() : { selftest: false, pack: null, in: null }
+
+if (!invokedDirectly) {
+  // imported as a library; nothing to do
+} else if (opts.selftest) {
   process.exit((await selftest()) === 0 ? 0 : 1)
 } else if (opts.pack) {
   // Slice every unit sheet in a pack directory.
