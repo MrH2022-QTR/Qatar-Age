@@ -1,0 +1,213 @@
+/*
+ * Ornate HUD chrome.
+ *
+ * The stone-and-timber frame is the most recognisable thing about the Age of
+ * Empires interface — more than any single unit. It is what makes a screenshot
+ * read as "Age of Empires" at a glance.
+ *
+ * The chrome is images; the text stays in the DOM. That split is deliberate and
+ * is the same reasoning as docs/SYSTEMS.md §10: the browser's text engine
+ * handles Arabic shaping and bidi correctly, and canvas text rendering does
+ * not. Painting the frame as a background image and letting real text sit on
+ * top gets the look without giving up correct Arabic.
+ *
+ * Every directional property is a CSS logical property, so `dir="rtl"` mirrors
+ * the whole interface. The chrome images are mirrored to match via a transform.
+ */
+
+#hud.chrome {
+  /* The frame art's own proportions, used to keep slots aligned to the art. */
+  --resource-bar-aspect: 12.27; /* 1264 / 103 */
+  --command-panel-aspect: 2.69; /* 1240 / 461 */
+  --minimap-aspect: 1.058; /* 293 / 277 */
+  --portrait-aspect: 1.278; /* 267 / 209 */
+
+  --chrome-gold: #e8c86a;
+  --chrome-ink: #1b140c;
+
+  /*
+   * Bottom-bar height drives every panel's size. Both dimensions are derived
+   * from it explicitly rather than via `aspect-ratio` with an auto inline-size:
+   * the command panel's percentage padding resolves against its own inline
+   * size, which is circular when that size is auto, and the panel inflates to
+   * fill the viewport.
+   */
+  --hud-h: clamp(112px, 19vh, 158px);
+}
+
+/* ── Resource bar ─────────────────────────────────────────────────────────── */
+
+.chrome-resources {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  inline-size: min(760px, 62vw);
+  aspect-ratio: var(--resource-bar-aspect);
+  background: url('/assets/sprites/hud_resource_bar_clean.png') no-repeat center / 100% 100%;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.55));
+}
+
+/* The art is not symmetric, so RTL mirrors the frame but not the numerals. */
+[dir='rtl'] .chrome-resources {
+  transform: translateX(50%) scaleX(-1);
+}
+[dir='rtl'] .chrome-resources > * {
+  transform: scaleX(-1);
+}
+
+/*
+ * Values are absolutely positioned onto the art's four parchment plaques,
+ * whose centres were measured from the image rather than assumed even:
+ * 19.62%, 37.97%, 56.96%, 77.22%. A four-column grid does not line up.
+ */
+.chrome-resource-value {
+  position: absolute;
+  inset-block-start: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(11px, 1.15vw, 16px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--chrome-ink);
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.chrome-resource-value:nth-child(1) { inset-inline-start: 19.62%; }
+.chrome-resource-value:nth-child(2) { inset-inline-start: 37.97%; }
+.chrome-resource-value:nth-child(3) { inset-inline-start: 56.96%; }
+.chrome-resource-value:nth-child(4) { inset-inline-start: 77.22%; }
+
+/* ── Command panel ────────────────────────────────────────────────────────── */
+
+.chrome-bottom {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline: 0;
+  block-size: var(--hud-h);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+  pointer-events: none;
+}
+
+.chrome-minimap {
+  block-size: var(--hud-h);
+  inline-size: calc(var(--hud-h) * 1.058);
+  background: url('/assets/sprites/hud_minimap_frame.png') no-repeat center / 100% 100%;
+  min-block-size: 0;
+  position: relative;
+  flex: 0 0 auto;
+}
+
+/* The minimap canvas sits inside the ring, clipped to a circle. */
+.chrome-minimap canvas {
+  position: absolute;
+  inset: 13%;
+  inline-size: 74%;
+  block-size: 74%;
+  border-radius: 50%;
+  display: block;
+}
+
+.chrome-command {
+  block-size: var(--hud-h);
+  inline-size: calc(var(--hud-h) * 2.69);
+  background: url('/assets/sprites/hud_command_panel.png') no-repeat center / 100% 100%;
+  min-block-size: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+
+  /*
+   * Insets are calc() against --hud-h, NOT percentages.
+   *
+   * Percentage padding resolves against the *containing block's* inline size —
+   * here the full-width bottom bar, 1280px — not the element's own width. So
+   * `padding: 13% ... 16%` produced 371px of vertical padding, which beat the
+   * declared 152px height and inflated the panel over half the screen.
+   *
+   * Fractions below are measured from the art: the button recesses occupy
+   * x 120-1140 of 1240 and y 90-400 of 461.
+   */
+  padding-block-start: calc(var(--hud-h) * 0.195);
+  padding-block-end: calc(var(--hud-h) * 0.13);
+  padding-inline-start: calc(var(--hud-h) * 0.26);
+  padding-inline-end: calc(var(--hud-h) * 0.215);
+  gap: calc(var(--hud-h) * 0.028);
+  flex: 0 0 auto;
+}
+
+.chrome-button {
+  pointer-events: auto;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 90ms ease;
+}
+
+.chrome-button:hover:not(:disabled) {
+  background-color: rgba(232, 200, 106, 0.22);
+}
+
+.chrome-button:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.chrome-portrait {
+  block-size: calc(var(--hud-h) * 0.84);
+  inline-size: calc(var(--hud-h) * 0.84 * 1.278);
+  background: url('/assets/sprites/hud_portrait_frame.png') no-repeat center / 100% 100%;
+  min-block-size: 0;
+  display: grid;
+  place-items: center;
+  /* Same percentage-padding trap as the command panel — use calc(). */
+  padding-block: calc(var(--hud-h) * 0.12);
+  padding-inline: calc(var(--hud-h) * 0.14);
+  flex: 0 0 auto;
+}
+
+.chrome-portrait-label {
+  font-size: clamp(10px, 1vw, 13px);
+  font-weight: 700;
+  color: var(--chrome-gold);
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  line-height: 1.25;
+}
+
+/* ── Status line ──────────────────────────────────────────────────────────── */
+
+.chrome-status {
+  position: absolute;
+  inset-block-end: calc(var(--hud-h) + 6px);
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--chrome-gold);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+[dir='rtl'] .chrome-status {
+  transform: translateX(50%);
+}
+
+/* Age and population sit top-right, clear of the resource bar. */
+.chrome-topright {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-end: 14px;
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+  color: var(--chrome-gold);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  pointer-events: none;
+}

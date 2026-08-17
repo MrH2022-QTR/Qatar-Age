@@ -157,6 +157,8 @@ await page.keyboard.press('F3')
 await page.keyboard.press('p')
 await page.waitForTimeout(400)
 check('debug overlay toggles', await page.locator('.hud-debug').isVisible())
+check('HUD chrome present', (await page.locator('.chrome-command').count()) === 1)
+check('minimap rendering', (await page.locator('.chrome-minimap canvas').count()) === 1)
 await shot(page, '04-debug')
 
 // ── Zoom ─────────────────────────────────────────────────────────────────────
@@ -174,9 +176,11 @@ await page.goto(`${URL}/?lang=ar`, { waitUntil: 'networkidle' })
 await page.waitForTimeout(2000)
 
 const rtl = await page.evaluate(() => document.documentElement.dir)
-const label = (await page.locator('.hud-resource-label').first().textContent()) ?? ''
+// The chrome HUD carries no resource labels (the art supplies the icons), so
+// Arabic is checked on the age readout instead.
+const label = (await page.locator('.chrome-topright').first().textContent()) ?? ''
 check('document direction flips to RTL', rtl === 'rtl')
-check('HUD strings localise to Arabic', /[؀-ۿ]/.test(label), label)
+check('HUD strings localise to Arabic', /[\u0600-\u06FF]/.test(label), label.trim().slice(0, 40))
 await shot(page, '06-arabic')
 
 // ── Load: 400 extra units ────────────────────────────────────────────────────

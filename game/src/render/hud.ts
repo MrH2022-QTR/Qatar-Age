@@ -16,8 +16,27 @@ import { formatNumber, t } from '../i18n'
 import type { GameWorld } from '../sim/world'
 import type { Simulation } from '../sim/simulation'
 import type { GameInput } from './input'
+import { TerrainType } from '../sim/grid'
+
+/** Minimap colours per terrain type — readable at 1px, not realistic. */
+const MINIMAP_COLORS: Record<number, number> = {
+  [TerrainType.Sand]: 0xc8a870,
+  [TerrainType.Desert]: 0xb89358,
+  [TerrainType.Gravel]: 0x9c8f74,
+  [TerrainType.Grass]: 0x6f8f4a,
+  [TerrainType.ShallowWater]: 0x5b93ad,
+  [TerrainType.DeepWater]: 0x2f5f7d,
+  [TerrainType.Rock]: 0x7a7568,
+}
 
 const RESOURCES = ['food', 'wood', 'stone', 'pearls'] as const
+
+/**
+ * The chrome art's resource plaques run wood, food, gold, stone left to right.
+ * Our resources are food, wood, stone, pearls — so the display order is
+ * remapped to sit under the right icon rather than reordering the model.
+ */
+const CHROME_SLOT_ORDER = ['wood', 'food', 'pearls', 'stone'] as const
 
 export class Hud {
   private root: HTMLElement
@@ -26,6 +45,9 @@ export class Hud {
   private ageEl!: HTMLElement
   private selectionEl!: HTMLElement
   private debugEl!: HTMLElement
+  private portraitEl!: HTMLElement
+  private minimapCanvas!: HTMLCanvasElement
+  private commandButtons: HTMLButtonElement[] = []
 
   private world: GameWorld
   private sim: Simulation
@@ -54,62 +76,67 @@ export class Hud {
 
   private build(): void {
     this.root.innerHTML = ''
+    this.root.classList.add('chrome')
 
-    // ── Top bar: resources, population, age ──────────────────────────────────
-    const top = document.createElement('div')
-    top.className = 'hud-top'
-
-    for (const kind of RESOURCES) {
-      const item = document.createElement('div')
-      item.className = 'hud-resource'
-
-      const swatch = document.createElement('span')
-      swatch.className = `hud-swatch hud-swatch-${kind}`
-
-      const label = document.createElement('span')
-      label.className = 'hud-resource-label'
-      label.textContent = t(`resource.${kind}`)
-
-      const value = document.createElement('span')
-      value.className = 'hud-resource-value'
-      value.textContent = '0'
-
-      item.append(swatch, label, value)
-      top.appendChild(item)
-      this.resourceEls.set(kind, value)
+    // ── Resource bar ────────────────────────────────────────────────────────
+    const res = document.createElement('div')
+    res.className = 'chrome-resources'
+    for (const kind of CHROME_SLOT_ORDER) {
+      const v = document.createElement('span')
+      v.className = 'chrome-resource-value'
+      v.textContent = '0'
+      res.appendChild(v)
+      this.resourceEls.set(kind, v)
     }
 
-    const spacer = document.createElement('div')
-    spacer.className = 'hud-spacer'
-    top.appendChild(spacer)
+    // ── Age / population, clear of the bar ──────────────────────────────────
+    const topRight = document.createElement('div')
+    topRight.className = 'chrome-topright'
+    this.popEl = document.createElement('span')
+    this.ageEl = document.createElement('span')
+    topRight.append(this.popEl, this.ageEl)
 
-    this.popEl = document.createElement('div')
-    this.popEl.className = 'hud-stat'
-    top.appendChild(this.popEl)
-
-    this.ageEl = document.createElement('div')
-    this.ageEl.className = 'hud-stat'
-    top.appendChild(this.ageEl)
-
-    // ── Bottom bar: selection and controls help ──────────────────────────────
-    const bottom = document.createElement('div')
-    bottom.className = 'hud-bottom'
-
+    // ── Status line ─────────────────────────────────────────────────────────
     this.selectionEl = document.createElement('div')
-    this.selectionEl.className = 'hud-selection'
-    bottom.appendChild(this.selectionEl)
+    this.selectionEl.className = 'chrome-status'
 
-    const help = document.createElement('div')
-    help.className = 'hud-help'
-    help.textContent = t('help.controls')
-    bottom.appendChild(help)
+    // ── Bottom bar: minimap, command panel, portrait ────────────────────────
+    const bottom = document.createElement('div')
+    bottom.className = 'chrome-bottom'
 
-    // ── Debug overlay ────────────────────────────────────────────────────────
+    const minimap = document.createElement('div')
+    minimap.className = 'chrome-minimap'
+    this.minimapCanvas = document.createElement('canvas')
+    this.minimapCanvas.width = 128
+    this.minimapCanvas.height = 128
+    minimap.appendChild(this.minimapCanvas)
+
+    const command = document.createElement('div')
+    command.className = 'chrome-command'
+    // Ten recesses in the stone; wired to actions as they are implemented.
+    for (let i = 0; i < 10; i++) {
+      const b = document.createElement('button')
+      b.className = 'chrome-button'
+      b.disabled = true
+      b.dataset.slot = String(i)
+      command.appendChild(b)
+      this.commandButtons.push(b)
+    }
+
+    const portrait = document.createElement('div')
+    portrait.className = 'chrome-portrait'
+    this.portraitEl = document.createElement('div')
+    this.portraitEl.className = 'chrome-portrait-label'
+    portrait.appendChild(this.portraitEl)
+
+    bottom.append(minimap, command, portrait)
+
+    // ── Debug overlay ───────────────────────────────────────────────────────
     this.debugEl = document.createElement('div')
     this.debugEl.className = 'hud-debug'
     this.debugEl.hidden = true
 
-    this.root.append(top, bottom, this.debugEl)
+    this.root.append(res, topRight, this.selectionEl, bottom, this.debugEl)
   }
 
   update(): void {
@@ -151,6 +178,9 @@ export class Hud {
       this.selectionEl.textContent = t('hud.units_selected', { count: sel.length })
     }
 
+    this.updatePortrait()
+    this.drawMinimap()
+
     if (this.showDebug) this.updateDebug()
   }
 
@@ -185,6 +215,79 @@ export class Hud {
   toggleDebug(): void {
     this.showDebug = !this.showDebug
     this.debugEl.hidden = !this.showDebug
+  }
+
+  /** Name of the current selection, shown in the portrait scroll. */
+  private updatePortrait(): void {
+    const sel = this.input.selected
+    if (sel.length === 0) {
+      this.portraitEl.textContent = ''
+      return
+    }
+    const e = this.world.get(sel[0]!)
+    if (!e?.typeId) {
+      this.portraitEl.textContent = ''
+      return
+    }
+    const key = e.building ? `building.${e.typeId}.name` : `unit.${e.typeId}.name`
+    this.portraitEl.textContent = sel.length > 1 ? `${t(key)}\n×${sel.length}` : t(key)
+  }
+
+  /**
+   * Minimap: terrain colours plus entity dots, drawn straight to a 2D canvas.
+   *
+   * Redrawn every frame at 128x128, which is cheap enough not to bother
+   * throttling — the whole thing is 16k pixels and the terrain half only
+   * changes when the cost grid revision does.
+   */
+  private terrainImage: ImageData | null = null
+  private terrainImageRevision = -1
+
+  private drawMinimap(): void {
+    const ctx = this.minimapCanvas.getContext('2d')
+    if (!ctx) return
+
+    const size = this.minimapCanvas.width
+    const grid = this.world.terrain
+    const sx = grid.width / size
+    const sy = grid.height / size
+
+    // Terrain layer is cached until the grid changes.
+    if (!this.terrainImage || this.terrainImageRevision !== grid.revision) {
+      const img = ctx.createImageData(size, size)
+      for (let y = 0; y < size; y++) {
+        for (let x = 0; x < size; x++) {
+          const t = grid.getTerrain(Math.floor(x * sx), Math.floor(y * sy))
+          const c = MINIMAP_COLORS[t] ?? 0x555555
+          const i = (y * size + x) * 4
+          img.data[i] = (c >> 16) & 0xff
+          img.data[i + 1] = (c >> 8) & 0xff
+          img.data[i + 2] = c & 0xff
+          img.data[i + 3] = 255
+        }
+      }
+      this.terrainImage = img
+      this.terrainImageRevision = grid.revision
+    }
+    ctx.putImageData(this.terrainImage, 0, 0)
+
+    // Entities on top.
+    for (const e of this.world.ecs.with('position')) {
+      const x = Math.floor(e.position.ne / sx)
+      const y = Math.floor(e.position.se / sy)
+      if (x < 0 || y < 0 || x >= size || y >= size) continue
+
+      if (e.resourceSpot) {
+        ctx.fillStyle = '#4a7a3a'
+        ctx.fillRect(x, y, 1, 1)
+        continue
+      }
+      const owner = e.owner !== undefined ? this.world.player(e.owner) : undefined
+      if (!owner) continue
+      ctx.fillStyle = `#${owner.color.toString(16).padStart(6, '0')}`
+      const r = e.building ? 3 : 2
+      ctx.fillRect(x - (r >> 1), y - (r >> 1), r, r)
+    }
   }
 
   /** Rebuild static text after a language change. */
