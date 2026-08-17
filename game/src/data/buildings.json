@@ -1,0 +1,143 @@
+{
+  "majlis": {
+    "id": "majlis",
+    "nameKey": "building.majlis.name",
+    "cost": {
+      "wood": 275,
+      "stone": 100
+    },
+    "buildTime": 60,
+    "hp": 600,
+    "widthNe": 4,
+    "heightSe": 4,
+    "armor": {
+      "melee": 3,
+      "pierce": 5
+    },
+    "lineOfSight": 12,
+    "trains": [
+      "laborer",
+      "pearl_diver"
+    ],
+    "researches": [
+      "age_pearling",
+      "age_trade"
+    ],
+    "dropSite": [
+      "food",
+      "wood",
+      "stone",
+      "pearls"
+    ],
+    "popProvided": 10,
+    "debugColor": "#c9b28a"
+  },
+  "bayt": {
+    "id": "bayt",
+    "nameKey": "building.bayt.name",
+    "cost": {
+      "wood": 30
+    },
+    "buildTime": 18,
+    "hp": 180,
+    "widthNe": 2,
+    "heightSe": 2,
+    "armor": {
+      "melee": 1,
+      "pierce": 2
+    },
+    "lineOfSight": 4,
+    "popProvided": 5,
+    "debugColor": "#d8c9a8"
+  },
+  "barzan_tower": {
+    "id": "barzan_tower",
+    "nameKey": "building.barzan_tower.name",
+    "cost": {
+      "stone": 125,
+      "wood": 25
+    },
+    "buildTime": 40,
+    "hp": 500,
+    "widthNe": 2,
+    "heightSe": 2,
+    "armor": {
+      "melee": 4,
+      "pierce": 6
+    },
+    "lineOfSight": 14,
+    "debugColor": "#b5a582"
+  },
+  "souq": {
+    "id": "souq",
+    "nameKey": "building.souq.name",
+    "cost": {
+      "wood": 175
+    },
+    "buildTime": 45,
+    "hp": 380,
+    "widthNe": 3,
+    "heightSe": 3,
+    "armor": {
+      "melee": 2,
+      "pierce": 4
+    },
+    "lineOfSight": 8,
+    "dropSite": [
+      "pearls"
+    ],
+    "researches": [
+      "trade_dhows"
+    ],
+    "debugColor": "#c79a5e"
+  },
+  "barracks": {
+    "id": "barracks",
+    "nameKey": "building.barracks.name",
+    "cost": {
+      "wood": 150
+    },
+    "buildTime": 40,
+    "hp": 420,
+    "widthNe": 3,
+    "heightSe": 3,
+    "armor": {
+      "melee": 2,
+      "pierce": 4
+    },
+    "lineOfSight": 7,
+    "trains": [
+      "spearman",
+      "archer",
+      "camel_rider"
+    ],
+    "researches": [
+      "forged_spears"
+    ],
+    "debugColor": "#a8895f"
+  },
+  "dhow_yard": {
+    "id": "dhow_yard",
+    "nameKey": "building.dhow_yard.name",
+    "cost": {
+      "wood": 120
+    },
+    "buildTime": 35,
+    "hp": 340,
+    "widthNe": 3,
+    "heightSe": 3,
+    "armor": {
+      "melee": 1,
+      "pierce": 3
+    },
+    "lineOfSight": 9,
+    "dropSite": [
+      "pearls",
+      "food"
+    ],
+    "researches": [
+      "deep_water_diving"
+    ],
+    "debugColor": "#8c7a5c"
+  }
+}

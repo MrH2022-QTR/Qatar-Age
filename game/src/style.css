@@ -1,0 +1,188 @@
+/*
+ * HUD styling.
+ *
+ * Every directional property here is a CSS *logical* property
+ * (inline-start/inline-end rather than left/right). That is not pedantry: it is
+ * what makes `dir="rtl"` flip the entire interface correctly for Arabic, and
+ * per docs/SYSTEMS.md §16 it is free if done from the first rule and miserable
+ * to retrofit across a finished stylesheet.
+ */
+
+:root {
+  --sand-100: #f2e6cf;
+  --sand-300: #d9c3a0;
+  --sand-700: #6b573a;
+  --ink-900: #10171d;
+  --ink-800: #16222c;
+  --ink-700: #1f2f3b;
+  --gulf-400: #4fa3c7;
+  --pearl: #f0ead6;
+
+  --panel-bg: rgba(16, 23, 29, 0.86);
+  --panel-border: rgba(217, 195, 160, 0.28);
+
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans Arabic",
+    "Segoe UI Arabic", Tahoma, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--ink-800);
+  color: var(--sand-100);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+}
+
+#canvas-host canvas {
+  display: block;
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+}
+
+#hud {
+  position: absolute;
+  inset: 0;
+  /* The HUD container must never eat clicks meant for the game world. Only
+     actual controls opt back in with pointer-events: auto. */
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* ── Top bar ──────────────────────────────────────────────────────────────── */
+
+.hud-top {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 16px;
+  background: linear-gradient(to bottom, var(--panel-bg), transparent);
+  font-size: 14px;
+}
+
+.hud-resource {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hud-swatch {
+  inline-size: 12px;
+  block-size: 12px;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+}
+
+.hud-swatch-food {
+  background: #c4553f;
+}
+.hud-swatch-wood {
+  background: #3f6b3a;
+}
+.hud-swatch-stone {
+  background: #8d8d8d;
+}
+.hud-swatch-pearls {
+  background: var(--pearl);
+}
+
+.hud-resource-label {
+  color: var(--sand-300);
+  font-size: 12px;
+}
+
+.hud-resource-value {
+  font-variant-numeric: tabular-nums;
+  min-inline-size: 3.5ch;
+  font-weight: 600;
+}
+
+.hud-spacer {
+  flex: 1;
+}
+
+.hud-stat {
+  color: var(--sand-300);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* ── Bottom bar ───────────────────────────────────────────────────────────── */
+
+.hud-bottom {
+  padding: 10px 16px 12px;
+  background: linear-gradient(to top, var(--panel-bg), transparent);
+}
+
+.hud-selection {
+  font-size: 15px;
+  font-weight: 600;
+  min-block-size: 20px;
+}
+
+.hud-help {
+  margin-block-start: 4px;
+  font-size: 11px;
+  color: var(--sand-300);
+  opacity: 0.75;
+}
+
+/* ── Debug overlay ────────────────────────────────────────────────────────── */
+
+.hud-debug {
+  position: absolute;
+  inset-block-start: 52px;
+  inset-inline-end: 16px;
+  min-inline-size: 220px;
+  padding: 10px 12px;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  font-size: 12px;
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+
+.hud-debug-title {
+  color: var(--gulf-400);
+  font-weight: 700;
+  margin-block-end: 6px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.hud-debug-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  line-height: 1.6;
+}
+
+.hud-debug-row span:first-child {
+  color: var(--sand-300);
+}
+
+/* ── Loading ──────────────────────────────────────────────────────────────── */
+
+#loading {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: var(--ink-900);
+  color: var(--sand-300);
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}

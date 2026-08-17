@@ -1,0 +1,32 @@
+{
+  "name": "kingdoms-of-qatar",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A Qatar-themed real-time strategy game for the browser",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src test --ext .ts",
+    "fuzz": "tsx src/sim/tools/fuzz-pathfinder.ts"
+  },
+  "dependencies": {
+    "miniplex": "^2.0.0",
+    "pixi.js": "^8.6.6"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "eslint": "^8.57.1",
+    "playwright": "^1.62.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "game.title": "Kingdoms of Qatar",
+
+  "unit.laborer.name": "Laborer",
+  "unit.pearl_diver.name": "Pearl Diver",
+  "unit.spearman.name": "Spearman",
+  "unit.archer.name": "Archer",
+  "unit.camel_rider.name": "Camel Rider",
+
+  "building.majlis.name": "Majlis",
+  "building.bayt.name": "House",
+  "building.barzan_tower.name": "Barzan Tower",
+  "building.souq.name": "Souq",
+  "building.barracks.name": "Barracks",
+  "building.dhow_yard.name": "Dhow Yard",
+
+  "civ.al_bidda.name": "Al Bidda",
+  "civ.al_zubarah.name": "Al Zubarah",
+  "civ.al_khor.name": "Al Khor",
+
+  "age.settlement.name": "Age of Settlement",
+  "age.pearling.name": "Age of Pearling",
+  "age.trade.name": "Age of Trade",
+  "age.unification.name": "Age of Unification",
+
+  "tech.age_pearling.name": "Advance to the Age of Pearling",
+  "tech.age_trade.name": "Advance to the Age of Trade",
+  "tech.deep_water_diving.name": "Deep Water Diving",
+  "tech.trade_dhows.name": "Trade Dhows",
+  "tech.forged_spears.name": "Forged Spears",
+
+  "resource.food": "Food",
+  "resource.wood": "Wood",
+  "resource.stone": "Stone",
+  "resource.pearls": "Pearls",
+
+  "hud.population": "Population",
+  "hud.age": "Age",
+  "hud.selected": "Selected",
+  "hud.nothing_selected": "Nothing selected",
+  "hud.units_selected": "{count} units selected",
+
+  "debug.title": "Debug",
+  "debug.entities": "Entities",
+  "debug.fps": "FPS",
+  "debug.paths_frame": "Paths/frame",
+  "debug.nodes_total": "Nodes expanded",
+  "debug.sim_time": "Sim time",
+  "debug.toggle_hint": "F3 debug · G grid · P paths",
+
+  "help.controls": "Left-click select · Drag box-select · Right-click move · Middle-drag or WASD pan · Wheel zoom · S stop · Esc deselect"
+}

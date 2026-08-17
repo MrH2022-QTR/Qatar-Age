@@ -1,0 +1,103 @@
+{
+  "ages": [
+    { "index": 0, "nameKey": "age.settlement.name", "cost": {}, "advanceTime": 0 },
+    { "index": 1, "nameKey": "age.pearling.name", "cost": { "food": 500 }, "advanceTime": 100 },
+    { "index": 2, "nameKey": "age.trade.name", "cost": { "food": 800, "pearls": 200 }, "advanceTime": 140 },
+    { "index": 3, "nameKey": "age.unification.name", "cost": { "food": 1000, "pearls": 800 }, "advanceTime": 190 }
+  ],
+
+  "techs": {
+    "age_pearling": {
+      "id": "age_pearling",
+      "nameKey": "tech.age_pearling.name",
+      "cost": { "food": 500 },
+      "researchTime": 100,
+      "requires": [],
+      "age": 0,
+      "patches": [
+        { "target": "laborer", "field": "hp", "op": "add", "value": 5 }
+      ]
+    },
+
+    "age_trade": {
+      "id": "age_trade",
+      "nameKey": "tech.age_trade.name",
+      "cost": { "food": 800, "pearls": 200 },
+      "researchTime": 140,
+      "requires": ["age_pearling"],
+      "age": 1,
+      "patches": [
+        { "target": "laborer", "field": "hp", "op": "add", "value": 5 }
+      ]
+    },
+
+    "deep_water_diving": {
+      "id": "deep_water_diving",
+      "nameKey": "tech.deep_water_diving.name",
+      "cost": { "wood": 150, "pearls": 50 },
+      "researchTime": 55,
+      "requires": ["age_pearling"],
+      "age": 1,
+      "patches": [
+        { "target": "pearl_diver", "field": "gatherRate.pearls", "op": "mul", "value": 1.3 },
+        { "target": "pearl_diver", "field": "carryCapacity", "op": "add", "value": 4 }
+      ]
+    },
+
+    "trade_dhows": {
+      "id": "trade_dhows",
+      "nameKey": "tech.trade_dhows.name",
+      "cost": { "wood": 200, "pearls": 75 },
+      "researchTime": 60,
+      "requires": ["age_trade"],
+      "age": 2,
+      "patches": [
+        { "target": "pearl_diver", "field": "speed", "op": "mul", "value": 1.15 }
+      ]
+    },
+
+    "forged_spears": {
+      "id": "forged_spears",
+      "nameKey": "tech.forged_spears.name",
+      "cost": { "food": 100, "stone": 50 },
+      "researchTime": 45,
+      "requires": [],
+      "age": 1,
+      "patches": [
+        { "target": "spearman", "field": "attack.melee", "op": "add", "value": 3 }
+      ]
+    }
+  },
+
+  "civs": {
+    "al_bidda": {
+      "id": "al_bidda",
+      "nameKey": "civ.al_bidda.name",
+      "uniqueUnit": "pearl_diver",
+      "bonuses": [
+        { "target": "pearl_diver", "field": "gatherRate.pearls", "op": "mul", "value": 1.2 },
+        { "target": "dhow_yard", "field": "cost.wood", "op": "mul", "value": 0.85 }
+      ]
+    },
+
+    "al_zubarah": {
+      "id": "al_zubarah",
+      "nameKey": "civ.al_zubarah.name",
+      "uniqueUnit": "camel_rider",
+      "bonuses": [
+        { "target": "barzan_tower", "field": "hp", "op": "mul", "value": 1.25 },
+        { "target": "camel_rider", "field": "speed", "op": "mul", "value": 1.1 }
+      ]
+    },
+
+    "al_khor": {
+      "id": "al_khor",
+      "nameKey": "civ.al_khor.name",
+      "uniqueUnit": "archer",
+      "bonuses": [
+        { "target": "laborer", "field": "gatherRate.food", "op": "mul", "value": 1.15 },
+        { "target": "archer", "field": "range", "op": "add", "value": 1 }
+      ]
+    }
+  }
+}
