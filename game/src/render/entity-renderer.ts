@@ -25,6 +25,7 @@ import { AoeSprite, animationForState } from './sprites/aoe-sprite'
 import type { SpriteLibrary } from './sprites/library'
 import { BuildingSpriteFactory, conditionFor, type Condition } from './building-sprites'
 import type { Sprite } from 'pixi.js'
+import { RESOURCE_ART, type SheetLibrary } from './sheets'
 
 /**
  * Maps our simulation's type ids onto sprite ids in the art pack.
@@ -69,6 +70,7 @@ export class EntityRenderer {
   private world: GameWorld
   private sprites: SpriteLibrary | null
   private buildings: BuildingSpriteFactory | null
+  private sheets: SheetLibrary | null
 
   /** Set false to force placeholder shapes even when art is loaded. */
   useSprites = true
@@ -77,10 +79,12 @@ export class EntityRenderer {
     world: GameWorld,
     sprites: SpriteLibrary | null = null,
     buildings: BuildingSpriteFactory | null = null,
+    sheets: SheetLibrary | null = null,
   ) {
     this.world = world
     this.sprites = sprites
     this.buildings = buildings
+    this.sheets = sheets
     // Painter's algorithm: PixiJS sorts children by zIndex, which we set from
     // the isometric depth in coords.depthOf.
     this.container.sortableChildren = true
@@ -127,6 +131,23 @@ export class EntityRenderer {
       lastHealth: -1,
       lastSelected: false,
       lastState: '',
+    }
+
+    // Resource nodes: real art, with the depletion column chosen by how much
+    // is left. A half-chopped forest should look half-chopped.
+    if (this.useSprites && e.resourceSpot && this.sheets) {
+      const art = RESOURCE_ART[e.resourceSpot.kind]
+      if (art && this.sheets.has(art.sheet)) {
+        const cols = this.sheets.shape(art.sheet)[art.row] ?? 1
+        const frac = Math.max(0, Math.min(1, e.resourceSpot.remaining / 200))
+        // Column 0 is full, last column is nearly spent.
+        const col = Math.min(cols - 1, Math.floor((1 - frac) * cols))
+        const spr = this.sheets.sprite(art.sheet, art.row, col, 72)
+        if (spr) {
+          d.building = spr
+          root.addChildAt(spr, 1)
+        }
+      }
     }
 
     // Buildings take their art from the damage-state sheet.

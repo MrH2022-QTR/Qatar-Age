@@ -135,3 +135,31 @@ its divers, the Barzan towers, Al Zubarah and Al Bidda, the majlis, the dhow yar
 a first pass by an engineer, not a historian: the schema will accept whatever numbers it is
 given, and making the civ set both historically defensible and good to play is real research
 that should run alongside the engineering rather than after it.
+
+---
+
+## Rebuilding assets from the art library
+
+`public/assets/sprites/` holds only the sheets the game currently references —
+about 38 MB. The full library is roughly 186 MB across 59 sheets, and putting
+that in git history would make every clone slow forever for art that is not yet
+wired to anything.
+
+To slice the whole library (e.g. after wiring a new category):
+
+```bash
+node tools/build-assets.mjs --lib <extracted-library> --out public/assets/sprites
+node tools/measure-terrain.mjs        # terrain needs true diamond geometry
+```
+
+`build-assets.mjs` runs every sheet through the same connected-component slicer
+and writes one `sheets.json`. Sheets are indexed `category/name`, and the
+placement tables in `src/render/sheets.ts` (`RESOURCE_ART`, `DOODAD_ROWS`) map
+game content onto specific rows — that is the seam where different art drops in.
+
+Currently wired: terrain atlas, buildings, 5 unit sheets, HUD chrome, resource
+depletion states, terrain decorations, map dressing.
+
+Sliced but not yet wired: unit animations, faction unit sets (incl. Middle
+Eastern), 4 further building sheets, construction states, projectiles, VFX,
+wildlife, cursors, portraits, action buttons, heraldry, loading screens.

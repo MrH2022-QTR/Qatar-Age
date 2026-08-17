@@ -29,6 +29,8 @@ import { TerrainRenderer } from './render/terrain-renderer'
 import { SpriteLibrary } from './render/sprites/library'
 import { TerrainSpriteRenderer, loadTerrainSheet } from './render/terrain-sprites'
 import { BuildingSpriteFactory, loadBuildingSheet } from './render/building-sprites'
+import { SheetLibrary, RESOURCE_ART, DOODAD_ROWS } from './render/sheets'
+import { TerrainScatter } from './render/scatter'
 import { Assets, type Texture } from 'pixi.js'
 import { TYPE_TO_SPRITE } from './render/entity-renderer'
 
@@ -129,17 +131,34 @@ async function main(): Promise<void> {
     console.info(`[art] building sheet: ${buildingSheet.rows.length} types x 3 damage states`)
   }
 
+  // Generic sheet library: resources, doodads, wildlife, effects, icons.
+  const sheets = new SheetLibrary()
+  const haveSheets = await sheets.load('assets/sprites')
+  if (haveSheets) {
+    const needed = new Set<string>()
+    for (const a of Object.values(RESOURCE_ART)) needed.add(a.sheet)
+    for (const list of Object.values(DOODAD_ROWS)) for (const d of list) needed.add(d.sheet)
+    await sheets.preload([...needed])
+    console.info(`[art] sheets: ${sheets.report()}`)
+  }
+
   const entityRenderer = new EntityRenderer(
     world,
     haveArt ? spriteLibrary : null,
     buildingFactory,
+    haveSheets ? sheets : null,
   )
+
+  // Scatter decoration across the ground to break up the tile lattice.
+  const scatter = haveSheets ? new TerrainScatter(terrain, sheets) : null
+  if (scatter) console.info(`[art] scatter: ${scatter.count} props`)
   const pathOverlay = new Graphics()
   const gridOverlay = terrainRenderer.buildGridOverlay()
   gridOverlay.visible = false
 
   worldLayer.addChild(
     terrainSprites ? terrainSprites.container : terrainRenderer.container,
+    ...(scatter ? [scatter.container] : []),
     gridOverlay,
     pathOverlay,
     entityRenderer.container,
