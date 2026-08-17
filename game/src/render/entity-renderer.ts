@@ -21,14 +21,41 @@ import type { Entity } from '../sim/components'
 import { depthOf, worldToScreen, HALF_H } from '../sim/coords'
 import { parseColor } from '../data'
 import type { GameWorld } from '../sim/world'
+import { AoeSprite, animationForState } from './sprites/aoe-sprite'
+import type { SpriteLibrary } from './sprites/library'
+
+/**
+ * Maps our simulation's type ids onto sprite ids in the art pack.
+ *
+ * Kept as an explicit table rather than assuming the names line up, because
+ * they don't and shouldn't: our content is Qatari-themed while an art pack is
+ * generic medieval. This is the seam where a different pack — or original
+ * Qatari art — swaps in without touching any rendering code.
+ */
+export const TYPE_TO_SPRITE: Record<string, string> = {
+  laborer: 'villager',
+  pearl_diver: 'villager',
+  spearman: 'spearman',
+  archer: 'archer',
+  camel_rider: 'cavalry',
+}
+
+/**
+ * Art-pack sprites are authored for a 128x64 tile; ours is 64x32. Scaling here
+ * rather than resampling the atlas keeps the source art intact for a future
+ * higher-resolution mode.
+ */
+const SPRITE_SCALE = 0.5
 
 interface Display {
   root: Container
   body: Graphics
+  sprite: AoeSprite | null
   selectionRing: Graphics
   healthBar: Graphics
   lastHealth: number
   lastSelected: boolean
+  lastState: string
 }
 
 export class EntityRenderer {
@@ -36,9 +63,14 @@ export class EntityRenderer {
 
   private displays = new Map<number, Display>()
   private world: GameWorld
+  private sprites: SpriteLibrary | null
 
-  constructor(world: GameWorld) {
+  /** Set false to force placeholder shapes even when art is loaded. */
+  useSprites = true
+
+  constructor(world: GameWorld, sprites: SpriteLibrary | null = null) {
     this.world = world
+    this.sprites = sprites
     // Painter's algorithm: PixiJS sorts children by zIndex, which we set from
     // the isometric depth in coords.depthOf.
     this.container.sortableChildren = true
@@ -77,13 +109,37 @@ export class EntityRenderer {
     const d: Display = {
       root,
       body,
+      sprite: null,
       selectionRing,
       healthBar,
       lastHealth: -1,
       lastSelected: false,
+      lastState: '',
     }
-    this.drawBody(e, d)
+
+    // Real art if the pack has it; placeholder shapes otherwise. This is what
+    // lets the game stay playable while art lands one unit at a time.
+    const spriteId = e.typeId ? TYPE_TO_SPRITE[e.typeId] : undefined
+    if (this.useSprites && spriteId && this.sprites) {
+      const s = this.sprites.createIfReady(spriteId)
+      if (s) {
+        s.scale.set(SPRITE_SCALE)
+        const player = e.owner !== undefined ? this.world.player(e.owner) : undefined
+        if (player) s.playerColor = player.color
+        d.sprite = s
+        root.addChildAt(s, 1) // above the selection ring, below the health bar
+      }
+    }
+
+    if (!d.sprite) this.drawBody(e, d)
+    else body.visible = false
+
     return d
+  }
+
+  /** Advance sprite animations. Real time, not simulation time. */
+  animate(dt: number): void {
+    for (const d of this.displays.values()) d.sprite?.update(dt)
   }
 
   private drawBody(e: Entity, d: Display): void {
@@ -156,10 +212,19 @@ export class EntityRenderer {
     d.root.position.set(p.x, p.y)
     d.root.zIndex = depthOf(e.position)
 
-    // Facing wedge, rotated to the unit's heading. Cheap stand-in for the
-    // angle-bucketed sprite sheets a real build would use.
-    if (e.facing !== undefined && e.movement) {
-      d.body.rotation = 0 // body art is symmetric for now
+    if (d.sprite) {
+      if (e.facing !== undefined) d.sprite.setFacing(e.facing)
+
+      const state = e.state?.kind ?? 'idle'
+      if (state !== d.lastState) {
+        d.sprite.play(animationForState(d.sprite, state))
+        d.lastState = state
+      }
+
+      if (e.health) {
+        // Buildings cross-fade a damage overlay; units just show a health bar.
+        d.sprite.damageLevel = e.building ? 1 - e.health.current / e.health.max : 0
+      }
     }
 
     // Selection ring — only redrawn when selection actually changes.

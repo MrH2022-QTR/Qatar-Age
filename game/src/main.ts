@@ -26,6 +26,8 @@ import { EntityRenderer } from './render/entity-renderer'
 import { GameInput, InputManager } from './render/input'
 import { Hud } from './render/hud'
 import { TerrainRenderer } from './render/terrain-renderer'
+import { SpriteLibrary } from './render/sprites/library'
+import { TYPE_TO_SPRITE } from './render/entity-renderer'
 
 const MAP_SIZE = 96
 const SEED = 20260817
@@ -91,8 +93,19 @@ async function main(): Promise<void> {
   const screenLayer = new Container()
   app.stage.addChild(worldLayer, screenLayer)
 
+  // Load the art pack. Absent or partial packs are fine — the entity renderer
+  // falls back to placeholder shapes per sprite, so the game always boots.
+  const spriteLibrary = new SpriteLibrary()
+  const haveArt = await spriteLibrary.load('assets/sprites')
+  if (haveArt) {
+    await spriteLibrary.preload([...new Set(Object.values(TYPE_TO_SPRITE))])
+    console.info(`[art] ${spriteLibrary.report()}`)
+  } else {
+    console.info('[art] no sprite pack found - using placeholder shapes')
+  }
+
   const terrainRenderer = new TerrainRenderer(terrain)
-  const entityRenderer = new EntityRenderer(world)
+  const entityRenderer = new EntityRenderer(world, haveArt ? spriteLibrary : null)
   const pathOverlay = new Graphics()
   const gridOverlay = terrainRenderer.buildGridOverlay()
   gridOverlay.visible = false
@@ -153,6 +166,7 @@ async function main(): Promise<void> {
     terrainRenderer.syncIfDirty()
     terrainRenderer.cull(camera)
     entityRenderer.sync()
+    entityRenderer.animate(realDelta)
     if (showPaths) entityRenderer.drawPaths(pathOverlay)
 
     hud.update()
@@ -160,7 +174,7 @@ async function main(): Promise<void> {
 
   // Surfaced for console poking during development.
   Object.assign(window as unknown as Record<string, unknown>, {
-    __game: { world, sim, camera, app, gameInput },
+    __game: { world, sim, camera, app, gameInput, spriteLibrary },
   })
 
   document.getElementById('loading')?.remove()
