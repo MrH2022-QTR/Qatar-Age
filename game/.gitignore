@@ -20,3 +20,4 @@ assets/aoe/
 *.sld
 *.drs
 *.dat
+public/aoe-data/

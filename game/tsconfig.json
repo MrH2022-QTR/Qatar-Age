@@ -5,6 +5,8 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    // The vendored sim imports with explicit .ts extensions.
+    "allowImportingTsExtensions": true,
     "types": ["vitest/globals", "node"],
 
     "strict": true,

@@ -10,7 +10,14 @@ export default defineConfig({
     },
   },
   server: { port: 5173, host: true },
-  build: { target: 'es2022', sourcemap: true },
+  build: {
+    target: 'es2022',
+    sourcemap: true,
+    rollupOptions: {
+      // Two entries: our own simulation, and the full adopted one.
+      input: { main: 'index.html', aoe: 'aoe.html' },
+    },
+  },
   test: {
     globals: true,
     environment: 'node',
