@@ -1,0 +1,524 @@
+{
+  "sheet": "terrain_atlas.png",
+  "width": 1536,
+  "height": 1024,
+  "rows": [
+    [
+      {
+        "x": 102,
+        "y": 110,
+        "w": 200,
+        "h": 94,
+        "anchorX": 99,
+        "anchorY": 88,
+        "diamond": {
+          "width": 200,
+          "height": 88,
+          "centerX": 100,
+          "centerY": 44
+        }
+      },
+      {
+        "x": 324,
+        "y": 109,
+        "w": 194,
+        "h": 94,
+        "anchorX": 97,
+        "anchorY": 90,
+        "diamond": {
+          "width": 194,
+          "height": 88,
+          "centerX": 97,
+          "centerY": 44
+        }
+      },
+      {
+        "x": 529,
+        "y": 107,
+        "w": 197,
+        "h": 95,
+        "anchorX": 99,
+        "anchorY": 91,
+        "diamond": {
+          "width": 197,
+          "height": 92,
+          "centerX": 98,
+          "centerY": 46
+        }
+      },
+      {
+        "x": 740,
+        "y": 109,
+        "w": 202,
+        "h": 94,
+        "anchorX": 100,
+        "anchorY": 90,
+        "diamond": {
+          "width": 202,
+          "height": 90,
+          "centerX": 101,
+          "centerY": 45
+        }
+      },
+      {
+        "x": 953,
+        "y": 108,
+        "w": 185,
+        "h": 94,
+        "anchorX": 93,
+        "anchorY": 90,
+        "diamond": {
+          "width": 184,
+          "height": 92,
+          "centerX": 93,
+          "centerY": 46
+        }
+      },
+      {
+        "x": 1159,
+        "y": 109,
+        "w": 200,
+        "h": 95,
+        "anchorX": 100,
+        "anchorY": 90,
+        "diamond": {
+          "width": 199,
+          "height": 92,
+          "centerX": 99,
+          "centerY": 46
+        }
+      }
+    ],
+    [
+      {
+        "x": 102,
+        "y": 249,
+        "w": 198,
+        "h": 95,
+        "anchorX": 101,
+        "anchorY": 90,
+        "diamond": {
+          "width": 198,
+          "height": 90,
+          "centerX": 99,
+          "centerY": 45
+        }
+      },
+      {
+        "x": 322,
+        "y": 249,
+        "w": 194,
+        "h": 94,
+        "anchorX": 96,
+        "anchorY": 91,
+        "diamond": {
+          "width": 194,
+          "height": 90,
+          "centerX": 97,
+          "centerY": 45
+        }
+      },
+      {
+        "x": 532,
+        "y": 248,
+        "w": 194,
+        "h": 95,
+        "anchorX": 96,
+        "anchorY": 90,
+        "diamond": {
+          "width": 193,
+          "height": 92,
+          "centerX": 96,
+          "centerY": 46
+        }
+      },
+      {
+        "x": 741,
+        "y": 249,
+        "w": 200,
+        "h": 95,
+        "anchorX": 101,
+        "anchorY": 91,
+        "diamond": {
+          "width": 199,
+          "height": 90,
+          "centerX": 99,
+          "centerY": 45
+        }
+      },
+      {
+        "x": 952,
+        "y": 249,
+        "w": 194,
+        "h": 95,
+        "anchorX": 97,
+        "anchorY": 90,
+        "diamond": {
+          "width": 193,
+          "height": 94,
+          "centerX": 97,
+          "centerY": 47
+        }
+      },
+      {
+        "x": 1164,
+        "y": 249,
+        "w": 196,
+        "h": 95,
+        "anchorX": 98,
+        "anchorY": 91,
+        "diamond": {
+          "width": 196,
+          "height": 94,
+          "centerX": 98,
+          "centerY": 47
+        }
+      }
+    ],
+    [
+      {
+        "x": 104,
+        "y": 381,
+        "w": 201,
+        "h": 98,
+        "anchorX": 98,
+        "anchorY": 93,
+        "diamond": {
+          "width": 201,
+          "height": 98,
+          "centerX": 100,
+          "centerY": 49
+        }
+      },
+      {
+        "x": 322,
+        "y": 381,
+        "w": 197,
+        "h": 96,
+        "anchorX": 99,
+        "anchorY": 93,
+        "diamond": {
+          "width": 197,
+          "height": 94,
+          "centerX": 98,
+          "centerY": 47
+        }
+      },
+      {
+        "x": 532,
+        "y": 381,
+        "w": 196,
+        "h": 97,
+        "anchorX": 99,
+        "anchorY": 92,
+        "diamond": {
+          "width": 196,
+          "height": 94,
+          "centerX": 98,
+          "centerY": 47
+        }
+      },
+      {
+        "x": 744,
+        "y": 382,
+        "w": 198,
+        "h": 94,
+        "anchorX": 98,
+        "anchorY": 91,
+        "diamond": {
+          "width": 198,
+          "height": 94,
+          "centerX": 99,
+          "centerY": 47
+        }
+      },
+      {
+        "x": 955,
+        "y": 382,
+        "w": 196,
+        "h": 95,
+        "anchorX": 96,
+        "anchorY": 91,
+        "diamond": {
+          "width": 195,
+          "height": 94,
+          "centerX": 97,
+          "centerY": 47
+        }
+      },
+      {
+        "x": 1163,
+        "y": 384,
+        "w": 197,
+        "h": 95,
+        "anchorX": 101,
+        "anchorY": 90,
+        "diamond": {
+          "width": 197,
+          "height": 88,
+          "centerX": 98,
+          "centerY": 44
+        }
+      }
+    ],
+    [
+      {
+        "x": 104,
+        "y": 528,
+        "w": 198,
+        "h": 95,
+        "anchorX": 100,
+        "anchorY": 91,
+        "diamond": {
+          "width": 198,
+          "height": 94,
+          "centerX": 99,
+          "centerY": 47
+        }
+      },
+      {
+        "x": 323,
+        "y": 529,
+        "w": 196,
+        "h": 94,
+        "anchorX": 97,
+        "anchorY": 90,
+        "diamond": {
+          "width": 196,
+          "height": 90,
+          "centerX": 98,
+          "centerY": 45
+        }
+      },
+      {
+        "x": 534,
+        "y": 529,
+        "w": 193,
+        "h": 94,
+        "anchorX": 95,
+        "anchorY": 89,
+        "diamond": {
+          "width": 192,
+          "height": 88,
+          "centerX": 96,
+          "centerY": 44
+        }
+      },
+      {
+        "x": 741,
+        "y": 513,
+        "w": 196,
+        "h": 110,
+        "anchorX": 98,
+        "anchorY": 107,
+        "diamond": {
+          "width": 196,
+          "height": 126,
+          "centerX": 98,
+          "centerY": 63
+        }
+      },
+      {
+        "x": 950,
+        "y": 529,
+        "w": 193,
+        "h": 93,
+        "anchorX": 96,
+        "anchorY": 89,
+        "diamond": {
+          "width": 193,
+          "height": 92,
+          "centerX": 96,
+          "centerY": 46
+        }
+      },
+      {
+        "x": 1158,
+        "y": 506,
+        "w": 206,
+        "h": 118,
+        "anchorX": 104,
+        "anchorY": 115,
+        "diamond": {
+          "width": 205,
+          "height": 138,
+          "centerX": 102,
+          "centerY": 69
+        }
+      }
+    ],
+    [
+      {
+        "x": 103,
+        "y": 669,
+        "w": 201,
+        "h": 97,
+        "anchorX": 101,
+        "anchorY": 92,
+        "diamond": {
+          "width": 201,
+          "height": 94,
+          "centerX": 100,
+          "centerY": 47
+        }
+      },
+      {
+        "x": 322,
+        "y": 668,
+        "w": 198,
+        "h": 96,
+        "anchorX": 97,
+        "anchorY": 92,
+        "diamond": {
+          "width": 198,
+          "height": 96,
+          "centerX": 99,
+          "centerY": 48
+        }
+      },
+      {
+        "x": 531,
+        "y": 671,
+        "w": 197,
+        "h": 93,
+        "anchorX": 97,
+        "anchorY": 89,
+        "diamond": {
+          "width": 197,
+          "height": 92,
+          "centerX": 98,
+          "centerY": 46
+        }
+      },
+      {
+        "x": 745,
+        "y": 652,
+        "w": 194,
+        "h": 113,
+        "anchorX": 98,
+        "anchorY": 108,
+        "diamond": {
+          "width": 194,
+          "height": 132,
+          "centerX": 97,
+          "centerY": 66
+        }
+      },
+      {
+        "x": 953,
+        "y": 666,
+        "w": 187,
+        "h": 99,
+        "anchorX": 94,
+        "anchorY": 95,
+        "diamond": {
+          "width": 187,
+          "height": 104,
+          "centerX": 93,
+          "centerY": 52
+        }
+      },
+      {
+        "x": 1158,
+        "y": 667,
+        "w": 203,
+        "h": 98,
+        "anchorX": 102,
+        "anchorY": 94,
+        "diamond": {
+          "width": 203,
+          "height": 100,
+          "centerX": 101,
+          "centerY": 50
+        }
+      }
+    ],
+    [
+      {
+        "x": 104,
+        "y": 813,
+        "w": 197,
+        "h": 94,
+        "anchorX": 100,
+        "anchorY": 90,
+        "diamond": {
+          "width": 197,
+          "height": 90,
+          "centerX": 98,
+          "centerY": 45
+        }
+      },
+      {
+        "x": 321,
+        "y": 814,
+        "w": 198,
+        "h": 92,
+        "anchorX": 99,
+        "anchorY": 88,
+        "diamond": {
+          "width": 198,
+          "height": 88,
+          "centerX": 99,
+          "centerY": 44
+        }
+      },
+      {
+        "x": 532,
+        "y": 815,
+        "w": 195,
+        "h": 90,
+        "anchorX": 96,
+        "anchorY": 87,
+        "diamond": {
+          "width": 195,
+          "height": 86,
+          "centerX": 97,
+          "centerY": 43
+        }
+      },
+      {
+        "x": 742,
+        "y": 813,
+        "w": 197,
+        "h": 94,
+        "anchorX": 98,
+        "anchorY": 89,
+        "diamond": {
+          "width": 197,
+          "height": 88,
+          "centerX": 98,
+          "centerY": 44
+        }
+      },
+      {
+        "x": 951,
+        "y": 813,
+        "w": 195,
+        "h": 94,
+        "anchorX": 97,
+        "anchorY": 89,
+        "diamond": {
+          "width": 195,
+          "height": 92,
+          "centerX": 97,
+          "centerY": 46
+        }
+      },
+      {
+        "x": 1165,
+        "y": 812,
+        "w": 197,
+        "h": 94,
+        "anchorX": 97,
+        "anchorY": 90,
+        "diamond": {
+          "width": 197,
+          "height": 94,
+          "centerX": 98,
+          "centerY": 47
+        }
+      }
+    ]
+  ],
+  "measured": true
+}

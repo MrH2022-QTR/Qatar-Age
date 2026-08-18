@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    // The vendored sim imports with explicit .ts extensions.
+    "allowImportingTsExtensions": true,
+    "types": ["vitest/globals", "node"],
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "exactOptionalPropertyTypes": false,
+
+    "noEmit": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@sim/*": ["src/sim/*"],
+      "@render/*": ["src/render/*"],
+      "@data/*": ["src/data/*"]
+    }
+  },
+  "include": ["src", "test", "vite.config.ts"],
+
+  /*
+   * src/aoe is the vendored Age of Kings simulation, adopted wholesale. It was
+   * written against a looser tsconfig (no noUncheckedIndexedAccess) and passes
+   * its own typecheck; re-linting someone else's 7k lines under our stricter
+   * settings would be noise, not signal. It is excluded here and validated by
+   * its own suite instead — `npm run test:aoe`, 73 tests.
+   */
+  "exclude": ["src/aoe", "aoe-test", "aoe-data", "node_modules", "dist"]
+}

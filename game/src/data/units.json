@@ -1,0 +1,92 @@
+{
+  "laborer": {
+    "id": "laborer",
+    "nameKey": "unit.laborer.name",
+    "cost": { "food": 50 },
+    "buildTime": 20,
+    "hp": 40,
+    "speed": 1.6,
+    "turnSpeed": 6.0,
+    "radius": 0.25,
+    "attack": { "melee": 3 },
+    "armor": { "melee": 0, "pierce": 0 },
+    "range": 0.5,
+    "attackSpeed": 2.0,
+    "lineOfSight": 6,
+    "carryCapacity": 10,
+    "gatherRate": { "food": 0.5, "wood": 0.5, "stone": 0.4 },
+    "debugColor": "#d9a86c",
+    "pop": 1
+  },
+
+  "pearl_diver": {
+    "id": "pearl_diver",
+    "nameKey": "unit.pearl_diver.name",
+    "cost": { "food": 60 },
+    "buildTime": 25,
+    "hp": 35,
+    "speed": 1.4,
+    "turnSpeed": 6.0,
+    "radius": 0.25,
+    "armor": { "melee": 0, "pierce": 0 },
+    "lineOfSight": 5,
+    "carryCapacity": 8,
+    "gatherRate": { "pearls": 0.35 },
+    "debugColor": "#4fa3c7",
+    "pop": 1
+  },
+
+  "spearman": {
+    "id": "spearman",
+    "nameKey": "unit.spearman.name",
+    "cost": { "food": 60, "wood": 20 },
+    "buildTime": 22,
+    "hp": 60,
+    "speed": 1.5,
+    "turnSpeed": 5.0,
+    "radius": 0.3,
+    "attack": { "melee": 8 },
+    "armor": { "melee": 1, "pierce": 1 },
+    "range": 0.6,
+    "attackSpeed": 2.0,
+    "lineOfSight": 7,
+    "debugColor": "#c2703d",
+    "pop": 1
+  },
+
+  "archer": {
+    "id": "archer",
+    "nameKey": "unit.archer.name",
+    "cost": { "wood": 40, "stone": 20 },
+    "buildTime": 26,
+    "hp": 40,
+    "speed": 1.5,
+    "turnSpeed": 5.0,
+    "radius": 0.28,
+    "attack": { "pierce": 6 },
+    "armor": { "melee": 0, "pierce": 0 },
+    "range": 5,
+    "attackSpeed": 2.4,
+    "lineOfSight": 8,
+    "debugColor": "#8fa65a",
+    "pop": 1
+  },
+
+  "camel_rider": {
+    "id": "camel_rider",
+    "nameKey": "unit.camel_rider.name",
+    "cost": { "food": 70, "stone": 30 },
+    "buildTime": 30,
+    "hp": 90,
+    "speed": 2.4,
+    "turnSpeed": 3.5,
+    "radius": 0.35,
+    "attack": { "melee": 11 },
+    "armor": { "melee": 1, "pierce": 0 },
+    "range": 0.7,
+    "attackSpeed": 2.2,
+    "lineOfSight": 9,
+    "debugColor": "#b8894a",
+    "pop": 2
+  }
+}

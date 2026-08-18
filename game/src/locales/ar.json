@@ -1,0 +1,52 @@
+{
+  "game.title": "ممالك قطر",
+
+  "unit.laborer.name": "عامل",
+  "unit.pearl_diver.name": "غواص لؤلؤ",
+  "unit.spearman.name": "رامح",
+  "unit.archer.name": "رامي سهام",
+  "unit.camel_rider.name": "فارس هجّان",
+
+  "building.majlis.name": "مجلس",
+  "building.bayt.name": "بيت",
+  "building.barzan_tower.name": "برج برزان",
+  "building.souq.name": "سوق",
+  "building.barracks.name": "ثكنة",
+  "building.dhow_yard.name": "دار السفن",
+
+  "civ.al_bidda.name": "البدع",
+  "civ.al_zubarah.name": "الزبارة",
+  "civ.al_khor.name": "الخور",
+
+  "age.settlement.name": "عصر الاستيطان",
+  "age.pearling.name": "عصر الغوص",
+  "age.trade.name": "عصر التجارة",
+  "age.unification.name": "عصر التوحيد",
+
+  "tech.age_pearling.name": "التقدم إلى عصر الغوص",
+  "tech.age_trade.name": "التقدم إلى عصر التجارة",
+  "tech.deep_water_diving.name": "الغوص في المياه العميقة",
+  "tech.trade_dhows.name": "سفن التجارة",
+  "tech.forged_spears.name": "الرماح المطروقة",
+
+  "resource.food": "الطعام",
+  "resource.wood": "الخشب",
+  "resource.stone": "الحجر",
+  "resource.pearls": "اللؤلؤ",
+
+  "hud.population": "السكان",
+  "hud.age": "العصر",
+  "hud.selected": "المحدد",
+  "hud.nothing_selected": "لا يوجد تحديد",
+  "hud.units_selected": "تم تحديد {count} وحدة",
+
+  "debug.title": "تصحيح",
+  "debug.entities": "الكيانات",
+  "debug.fps": "الإطارات",
+  "debug.paths_frame": "المسارات/إطار",
+  "debug.nodes_total": "العقد المستكشفة",
+  "debug.sim_time": "زمن المحاكاة",
+  "debug.toggle_hint": "F3 تصحيح · G شبكة · P مسارات",
+
+  "help.controls": "زر أيسر للتحديد · سحب لتحديد مجموعة · زر أيمن للتحرك · WASD للتحريك · عجلة للتكبير · S للتوقف · Esc لإلغاء التحديد"
+}

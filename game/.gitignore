@@ -1,0 +1,23 @@
+node_modules/
+dist/
+shots/
+test/fixtures/path-failure-*.json
+*.log
+.DS_Store
+
+# ── Extracted Age of Empires II game data ────────────────────────────────────
+# aoe-data/ is ~12 MB transcoded from empires2_x2_p1.dat — Microsoft's data, not
+# ours. Qatar-Age is a PUBLIC repository, so this stays out of it. Regenerate
+# locally from age-of-kings-qatar/sim/data/.
+#
+# The simulation SOURCE (src/aoe/, aoe-test/) is original work and IS committed.
+aoe-data/
+public/aoe-assets/
+assets/aoe/
+*.slp
+*.smx
+*.smp
+*.sld
+*.drs
+*.dat
+public/aoe-data/
